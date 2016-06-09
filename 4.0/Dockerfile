@@ -1,4 +1,4 @@
-FROM centos:centos7
+FROM openshift/base-centos7
 
 # This image provides a Passenger 4.0 environment you can use to run your Passenger
 # applications.
@@ -8,7 +8,9 @@ EXPOSE 8080
 ENV PASSENGER_VERSION 4.0
 
 RUN yum install -y centos-release-scl-rh && \
-    yum install -y --setopt=tsflags=nodocs rh-ruby22 rh-ruby22-ruby-devel rh-ruby22-rubygem-rake v8314 rh-ruby22-rubygem-bundler rh-ror41-rubygem-rack nodejs010 rh-passenger40-mod_passenger rh-passenger40-ruby22 httpd24 && \
+    INSTALL_PKGS="rh-ruby22 rh-ruby22-ruby-devel rh-ruby22-rubygem-rake v8314 rh-ruby22-rubygem-bundler rh-ror41-rubygem-rack nodejs010 rh-passenger40-mod_passenger rh-passenger40-ruby22 httpd24" && \
+    yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
+    rpm -V $INSTALL_PKGS && \
     yum clean all -y
 
 # Copy the STI scripts from the specific language image to $STI_SCRIPTS_PATH
