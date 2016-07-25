@@ -54,7 +54,7 @@ prepare() {
 }
 
 run_test_application() {
-  docker run --user=1001 --rm --cidfile=${cid_file} -p ${test_port} ${IMAGE_NAME}-testapp
+  docker run --user=10001 --rm --cidfile=${cid_file} -p ${test_port} ${IMAGE_NAME}-testapp
 }
 
 cleanup() {
@@ -164,6 +164,7 @@ test_scl_usage() {
 }
 
 pushd ${test_dir}
+rm -rf ruby-hello-world db-test-app
 git clone git://github.com/openshift/ruby-hello-world
 mv ruby-hello-world db-test-app
 popd
