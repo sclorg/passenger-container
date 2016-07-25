@@ -7,6 +7,12 @@ EXPOSE 8080
 
 ENV PASSENGER_VERSION 4.0
 
+LABEL summary="Passenger 4.0 environment you can use to run your Passenger" \
+      io.k8s.description="Passenger 4.0 environment you can use to run your Passenger" \
+      io.k8s.display-name="Passenger 4.0" \
+      io.openshift.expose-services="8080:http" \
+      io.openshift.tags="builder,passenger,ruby,nodejs"
+
 RUN yum install -y centos-release-scl-rh && \
     INSTALL_PKGS="rh-ruby22 rh-ruby22-ruby-devel rh-ruby22-rubygem-rake v8314 rh-ruby22-rubygem-bundler rh-ror41-rubygem-rack nodejs010 rh-passenger40-mod_passenger rh-passenger40-ruby22 httpd24 nss_wrapper" && \
     yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
