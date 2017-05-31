@@ -5,9 +5,15 @@ FROM rhscl/s2i-base-rhel7:1
 
 EXPOSE 8080
 
-ENV PASSENGER_VERSION 4.0 \
-    SUMMARY="Passenger 4.0 environment you can use to run your Passenger" \
-    DESCRIPTION="Passenger 4.0 environment you can use to run your Passenger"
+ENV PASSENGER_VERSION=4.0 \
+    RUBY_VERSION=2.2 \
+    NODEJS_VERSION=0.10
+
+ENV SUMMARY="Phusion Passenger $PASSENGER_VERSION web server and application server" \
+    DESCRIPTION="Phusion Passenger $PASSENGER_VERSION web server and application server configured \
+with Apache httpd web server. It also provides a Ruby $RUBY_VERSION platform for \
+building and running applications. Node.js $NODEJS_VERSION is preinstalled for \
+assets compilation."
 
 LABEL summary="$SUMMARY" \
       description="$DESCRIPTION" \
