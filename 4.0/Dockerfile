@@ -22,10 +22,8 @@ RUN yum install -y centos-release-scl-rh && \
 # Copy the STI scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH
 
-# Each language image can have 'contrib' a directory with extra files needed to
-# run and build the applications.
-COPY ./contrib/ /opt/app-root
-COPY ./contrib/ /opt/openshift
+# Copy extra files to the image.
+COPY ./root/ /
 
 RUN chown -R 1001:0 /opt/app-root
 
