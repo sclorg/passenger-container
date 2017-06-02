@@ -17,7 +17,7 @@ assets compilation."
 
 LABEL summary="$SUMMARY" \
       description="$DESCRIPTION" \
-      io.k8s.description="DESCRIPTION" \
+      io.k8s.description="$DESCRIPTION" \
       io.k8s.display-name="Passenger 4.0" \
       io.openshift.expose-services="8080:http" \
       io.openshift.tags="builder,passenger,ruby,nodejs" \
