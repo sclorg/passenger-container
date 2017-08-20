@@ -1,4 +1,4 @@
-FROM centos/s2i-base-centos7
+FROM centos/s2i-core-centos7
 
 # This image provides a Passenger 4.0 environment you can use to run your Passenger
 # applications.
