@@ -18,12 +18,12 @@ assets compilation."
 LABEL summary="$SUMMARY" \
       description="$DESCRIPTION" \
       io.k8s.description="$DESCRIPTION" \
-      io.k8s.display-name="Passenger 4.0" \
+      io.k8s.display-name="Passenger $PASSENGER_VERSION" \
       io.openshift.expose-services="8080:http" \
       io.openshift.tags="builder,passenger,ruby,nodejs" \
       com.redhat.component="rh-passenger40-docker" \
       name="centos/passenger-40-centos7" \
-      version="4.0" \
+      version="$PASSENGER_VERSION" \
       release="1"
 
 RUN yum install -y centos-release-scl-rh && \
@@ -38,20 +38,16 @@ COPY ./s2i/bin/ $STI_SCRIPTS_PATH
 # Copy extra files to the image.
 COPY ./root/ /
 
-RUN chown -R 1001:0 /opt/app-root
+ENV PASSENGER_CONTAINER_SCRIPTS_PATH=/usr/share/container-scripts/passenger/ \
+    PASSENGER_APP_ROOT=/opt/app-root \
+    PASSENGER_VAR_RUN=/var/run/rh-passenger40 \
+    PASSENGER_SESSION_DIR=/tmp/sessions \
+    PASSENGER_RUBY_BIN=/opt/rh/rh-passenger40/root/usr/libexec/passenger-ruby22 \
+    HTTPD_CONFIGURATION_PATH=/opt/rh/httpd24/root/etc/httpd/conf/httpd.conf \
+    HTTPD_VAR_RUN=/opt/rh/httpd24/root/var/run/httpd \
+    HTTPD_VAR_ORIG_PATH=/opt/rh/httpd24/root/var
 
-# In order to drop the root user, we have to make some directories world
-# writeable as OpenShift default "security" model is to run the container under
-# random UID.
-#    sed -ri ' s!^(\s*CustomLog)\s+\S+!\1 /proc/self/fd/1!g; s!^(\s*ErrorLog)\s+\S+!\1 /proc/self/fd/2!g;' /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf && \
-RUN sed -i -f /opt/app-root/etc/httpdconf.sed /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf && \
-    head -n151 /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf | tail -n1 | grep "AllowOverride All" || exit && \
-    mkdir /tmp/sessions && \
-    mkdir -p /opt/app-root/src/public && \
-    chmod -R og+rwx /opt/rh/httpd24/root/var/run/httpd && \
-    chmod -R og+rwx /var/run/rh-passenger40 && \
-    chown -R 1001:0 /opt/app-root /tmp/sessions && \
-    cat /opt/app-root/etc/passenger.conf >> /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf
+RUN /usr/libexec/passenger-prepare
 
 USER 1001
 
