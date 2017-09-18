@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -xe
+
+sed -i -e "s/^Listen 80/Listen 0.0.0.0:8080/" ${HTTPD_CONFIGURATION_PATH}
+sed -i -e "s/^User apache/User default/" ${HTTPD_CONFIGURATION_PATH}
+sed -i -e "s/^Group apache/Group root/" ${HTTPD_CONFIGURATION_PATH}
+sed -i -e "s%^DocumentRoot \"${HTTPD_VAR_ORIG_PATH}/www/html\"%DocumentRoot \"${PASSENGER_APP_ROOT}/src/public\"%" ${HTTPD_CONFIGURATION_PATH}
+sed -i -e "s%^<Directory \"${HTTPD_VAR_ORIG_PATH}/www/html\"%<Directory \"${PASSENGER_APP_ROOT}/src\"%" ${HTTPD_CONFIGURATION_PATH}
+sed -i -e "s%^<Directory \"${HTTPD_VAR_ORIG_PATH}/html\"%<Directory \"${PASSENGER_APP_ROOT}/src\"%" ${HTTPD_CONFIGURATION_PATH}
+sed -i -e "s%^ErrorLog \"logs/error_log\"%ErrorLog \"/tmp/error_log\"%" ${HTTPD_CONFIGURATION_PATH}
+sed -i -e "s%CustomLog \"logs/access_log\"%CustomLog \"/tmp/access_log\"%" ${HTTPD_CONFIGURATION_PATH}
+
+sed -i -e "151s%AllowOverride None%AllowOverride All%" ${HTTPD_CONFIGURATION_PATH}
+head -n151 ${HTTPD_CONFIGURATION_PATH} | tail -n1 | grep "AllowOverride All" || exit 1
+
+sed -i -e "s%/usr/bin/ruby%${PASSENGER_RUBY_BIN}%" ${PASSENGER_APP_ROOT}/etc/passenger.conf
+
+mkdir ${PASSENGER_SESSION_DIR}
+mkdir -p ${PASSENGER_APP_ROOT}/src/public
+chmod -R og+rwx ${HTTPD_VAR_RUN}
+chmod -R og+rwx ${PASSENGER_VAR_RUN}
+chown -R 1001:0 ${PASSENGER_APP_ROOT} ${PASSENGER_SESSION_DIR}
+cat ${PASSENGER_APP_ROOT}/etc/passenger.conf >> ${HTTPD_CONFIGURATION_PATH}
+chown -R 1001:0 ${PASSENGER_APP_ROOT}
+
