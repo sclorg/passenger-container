@@ -24,7 +24,8 @@ LABEL summary="$SUMMARY" \
       com.redhat.component="rh-passenger40-docker" \
       name="rhscl/passenger-40-rhel7" \
       version="$PASSENGER_VERSION" \
-      release="33.3"
+      usage="s2i build file:///your/app rhscl/passenger-40-rhel7 your-app" \
+      maintainer="SoftwareCollections.org <sclorg@redhat.com>"
 
 RUN yum install -y yum-utils && \
     yum-config-manager --disable \* &> /dev/null && \

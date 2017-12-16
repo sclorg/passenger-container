@@ -2,7 +2,7 @@ Phusion Passenger Docker images
 ===============================
 
 This repository contains Dockerfiles for Phusion Passenger images for OpenShift.
-Users can choose between RHEL and CentOS based images.
+Users can choose between RHEL, Fedora and CentOS based images.
 
 For more information about contributing, see
 [the Contribution Guidelines](https://github.com/sclorg/welcome/blob/master/contribution.md).
@@ -27,7 +27,8 @@ Installation
 To build a Passenger image, choose either the CentOS or RHEL based image:
 *  **RHEL based image**
 
-    This image is available in Red Hat Container Registry. To download it run:
+    These images are available in the [Red Hat Container Catalog](https://access.redhat.com/containers/#/registry.access.redhat.com/rhscl/passenger-40-rhel7).
+    To download it run:
 
     ```
     $ docker pull registry.access.redhat.com/rhscl/passenger-40-rhel7
