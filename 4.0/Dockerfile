@@ -24,7 +24,8 @@ LABEL summary="$SUMMARY" \
       com.redhat.component="rh-passenger40-docker" \
       name="centos/passenger-40-centos7" \
       version="$PASSENGER_VERSION" \
-      release="1"
+      usage="s2i build file:///your/app centos/passenger-40-centos7 your-app" \
+      maintainer="SoftwareCollections.org <sclorg@redhat.com>"
 
 RUN yum install -y centos-release-scl-rh && \
     INSTALL_PKGS="rh-ruby22 rh-ruby22-ruby-devel rh-ruby22-rubygem-rake v8314 rh-ruby22-rubygem-bundler rh-ror41-rubygem-rack nodejs010 rh-passenger40-mod_passenger rh-passenger40-ruby22 httpd24 nss_wrapper" && \
