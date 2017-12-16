@@ -47,7 +47,7 @@ COPY ./root/ /
 COPY README.md /README.md
 
 ENV PASSENGER_CONTAINER_SCRIPTS_PATH=/usr/share/container-scripts/passenger/ \
-    PASSENGER_APP_ROOT=/opt/app-root \
+    PASSENGER_APP_ROOT=${APP_ROOT} \
     PASSENGER_VAR_RUN=/var/run/passenger \
     PASSENGER_SESSION_DIR=/tmp/sessions \
     PASSENGER_RUBY_BIN=/usr/bin/ruby \
