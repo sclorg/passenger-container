@@ -52,7 +52,7 @@ No further configuration is required.
 
 S2I build support
 -------------
-This Docker image supports the S2I tool (see Usage section). 
+This container image supports the S2I tool (see Usage section). 
 This image contains and enables the `rh-ruby22`, `rh-ror41`, `nodejs010`, `rh-passenger40`, and `httpd24` Software Collections. 
 It is especially designed to support automatic S2I builds.
 

@@ -1,4 +1,4 @@
-Phusion Passenger Docker images
+Phusion Passenger container images
 ===============================
 
 This repository contains Dockerfiles for Phusion Passenger images for OpenShift.
@@ -6,7 +6,7 @@ Users can choose between RHEL, Fedora and CentOS based images.
 
 For more information about contributing, see
 [the Contribution Guidelines](https://github.com/sclorg/welcome/blob/master/contribution.md).
-For more information about concepts used in these docker images, see the
+For more information about concepts used in these container images, see the
 [Landing page](https://github.com/sclorg/welcome).
 
 
