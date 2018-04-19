@@ -1,13 +1,13 @@
-FROM rhscl/s2i-base-rhel7:1
+FROM registry.fedoraproject.org/f26/s2i-base:latest
 
-# This image provides a Passenger 4.0 environment you can use to run your Passenger
+# This image provides a Passenger environment you can use to run your Passenger
 # applications.
 
 EXPOSE 8080
 
-ENV PASSENGER_VERSION=4.0 \
-    RUBY_VERSION=2.2 \
-    NODEJS_VERSION=0.10
+ENV PASSENGER_VERSION=5.0 \
+    RUBY_VERSION=2.4 \
+    NODEJS_VERSION=6
 
 ENV SUMMARY="Phusion Passenger $PASSENGER_VERSION web server and application server" \
     DESCRIPTION="Phusion Passenger $PASSENGER_VERSION web server and application server configured \
@@ -15,21 +15,26 @@ with Apache httpd web server. It also provides a Ruby $RUBY_VERSION platform for
 building and running applications. Node.js $NODEJS_VERSION is preinstalled for \
 assets compilation."
 
+ENV NAME=passenger \
+    VERSION=0 \
+    RELEASE=1 \
+    ARCH=x86_64
+
 LABEL summary="$SUMMARY" \
       description="$DESCRIPTION" \
       io.k8s.description="$DESCRIPTION" \
       io.k8s.display-name="Passenger $PASSENGER_VERSION" \
       io.openshift.expose-services="8080:http" \
       io.openshift.tags="builder,passenger,ruby,nodejs" \
-      com.redhat.component="rh-passenger40-docker" \
-      name="rhscl/passenger-40-rhel7" \
-      version="$PASSENGER_VERSION" \
-      usage="s2i build file:///your/app rhscl/passenger-40-rhel7 your-app" \
+      com.redhat.component="$NAME" \
+      name="$FGC/$NAME" \
+      version="$VERSION" \
+      release="$RELEASE.$DISTTAG" \
+      architecture="$ARCH" \
+      usage="s2i build file:///your/app $FGC/$NAME your-app" \
       maintainer="SoftwareCollections.org <sclorg@redhat.com>"
 
-RUN yum install -y yum-utils && \
-    prepare-yum-repositories rhel-server-rhscl-7-rpms && \
-    INSTALL_PKGS="rh-ruby22 rh-ruby22-ruby-devel rh-ruby22-rubygem-rake v8314 rh-ruby22-rubygem-bundler rh-ror41-rubygem-rack nodejs010 rh-passenger40-mod_passenger rh-passenger40-ruby22 httpd24 nss_wrapper" && \
+RUN INSTALL_PKGS="ruby ruby-devel rubygem-rake rubygem-bundler rubygem-rack passenger nodejs npm mod_passenger httpd nss_wrapper" && \
     yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
     yum clean all -y
@@ -39,18 +44,20 @@ COPY ./s2i-common/bin/ $STI_SCRIPTS_PATH
 
 # Copy extra files to the image.
 COPY ./root-common/ /
+COPY README.md /README.md
 
 ENV PASSENGER_CONTAINER_SCRIPTS_PATH=/usr/share/container-scripts/passenger/ \
-    PASSENGER_APP_ROOT=${APP_ROOT} \
-    PASSENGER_VAR_RUN=/var/run/rh-passenger40 \
+    PASSENGER_APP_ROOT=/opt/app-root \
+    PASSENGER_VAR_RUN=/var/run/passenger \
     PASSENGER_SESSION_DIR=/tmp/sessions \
-    PASSENGER_RUBY_BIN=/opt/rh/rh-passenger40/root/usr/libexec/passenger-ruby22 \
-    HTTPD_CONFIGURATION_PATH=/opt/rh/httpd24/root/etc/httpd/conf/httpd.conf \
-    HTTPD_VAR_RUN=/opt/rh/httpd24/root/var/run/httpd \
-    HTTPD_VAR_ORIG_PATH=/opt/rh/httpd24/root/var
+    PASSENGER_RUBY_BIN=/usr/bin/ruby \
+    HTTPD_CONFIGURATION_PATH=/etc/httpd/conf/httpd.conf \
+    HTTPD_VAR_RUN=/var/run/httpd \
+    HTTPD_VAR_ORIG_PATH=/var
 
-# Reset permissions of filesystem to default values
-RUN /usr/libexec/passenger-prepare && rpm-file-permissions
+RUN /usr/libexec/passenger-prepare
+
+RUN chown -R 1001:0 /opt/app-root
 
 USER 1001
 
