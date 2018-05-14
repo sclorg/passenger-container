@@ -12,15 +12,7 @@ For more information about concepts used in these container images, see the
 
 Versions
 ---------------
-Passenger versions currently provided are:
-* [passenger-4.0](4.0)
-
-RHEL versions currently supported are:
-* RHEL7
-
-CentOS versions currently supported are:
-* CentOS7
-
+**All Passenger versions are currently deprecated and not supported anymore**
 
 Installation
 ---------------
